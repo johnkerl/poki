@@ -1,5 +1,5 @@
 # poki
 A poor man's wiki generator
 
-Please also see
+For more information please see
 http://johnkerl.org/poki/doc

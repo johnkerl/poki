@@ -171,7 +171,7 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
             end
           end
 
-        # Template directive: Absent any other directives, copy the template file to the output file.
+        # Absent any other directives, copy the template file to the output file.
         else
           output_handle.write(template_line)
 

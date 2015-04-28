@@ -115,6 +115,23 @@ In <tt>name-of-one-page.html</tt> simply put
 <tt>POKI_<wbr>PUT_LINK_FOR_PAGE(name-of-other-page.html)HERE</tt>.  Poki will
 replace that with a hyperlink to <tt>name-of-other-page.html</tt>, with link
 text taken from the page title in your <tt>poki.cfg</tt>.
+
+<!-- Use <wbr> to avoid expansion of the keyword, for this doc page -->
+<li/><tt>POKI<wbr>_INCLUDE_ESCAPED(file-name-goes-here)HERE</tt>:
+Include the contents of the specified file, wrapped by
+<tt>&lt;pre&gt;</tt>
+and
+<tt>&lt;/pre&gt;</tt>,
+with
+<tt>&amp;</tt>
+<tt>&lt;</tt>
+<tt>&gt;</tt>
+sent to
+<tt>&amp;amp;</tt>
+<tt>&amp;lt;</tt>
+<tt>&amp;gt;</tt>,
+respectively. Useful for including code snippets.
+
 </ul>
 
 <h1>Limitations</h1>  <a id="Limitations"/>

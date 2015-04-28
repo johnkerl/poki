@@ -27,7 +27,7 @@ Usage: #{$us} [options]
 Options:
 -c {config file}         Default #{$default_config_file_name}
 -t {template file}       Default #{$default_template_file_name}
--p {content-fie prefix}  Default #{$default_content_file_prefix}
+-p {content-file prefix} Default #{$default_content_file_prefix}
 -h|--help                Print this message
 Please see ./doc in poki's source directory
 https://github.com/johnkerl/poki

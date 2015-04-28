@@ -143,6 +143,19 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
               output_handle.puts("</div>")
               output_handle.puts("<p/>")
 
+            # Page-content directive: include other file (do HTML escapes)
+            elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
+              included_file_name = $1
+              output_handle.puts(content_line.sub(/POKI_INCLUDE_ESCAPED\([^)]+\)HERE/, ''))
+              output_handle.puts('<pre>')
+              File.readlines(included_file_name).each do |included_line|
+                included_line.gsub!("&", "&amp;")
+                included_line.gsub!("<", "&lt;")
+                included_line.gsub!(">", "&gt;")
+                output_handle.puts(included_line)
+              end
+              output_handle.puts('</pre>')
+
             # Page-content directive: link to sibling in pageset.
             elsif content_line =~ /POKI_PUT_LINK_FOR_PAGE\(([^)]+)\)HERE/
               other_page_name = $1
@@ -166,6 +179,7 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
             elsif content_line =~ /<h([1-9])>(.*)<\/h[1-9]>/
               tag = $2.strip
               output_handle.write(content_line.chomp + "  <a id=\"#{tag}\"/>")
+
             else
               output_handle.write(content_line)
             end

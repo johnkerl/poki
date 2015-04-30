@@ -171,6 +171,8 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
                 included_line.gsub!("&", "&amp;")
                 included_line.gsub!("<", "&lt;")
                 included_line.gsub!(">", "&gt;")
+                included_line.sub!(/^/, '    ')
+                included_line.rstrip!
                 output_handle.puts(included_line)
               end
               output_handle.puts('</pre>')

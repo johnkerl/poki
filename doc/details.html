@@ -87,6 +87,7 @@ pageTracker._trackPageview();
 &bull; <a href="#Naming conventions">Naming conventions</a><br/>
 &bull; <a href="#Template-side markup">Template-side markup</a><br/>
 &bull; <a href="#Content-side markup">Content-side markup</a><br/>
+&bull; <a href="#poki.cfg">poki.cfg</a><br/>
 &bull; <a href="#Limitations">Limitations</a><br/>
 </div>
 <p/>
@@ -151,6 +152,25 @@ sent to
 <tt>&amp;gt;</tt>,
 respectively. Useful for including code snippets.
 
+</ul>
+
+<h1>poki.cfg</h1>  <a id="poki.cfg"/>
+This pageset&rsquo;s <tt>poki.cfg</tt> looks like:
+
+
+<pre>
+    index.html                          About Poki
+    walkthrough.html                    Walkthrough
+    details.html                        Details
+    setup.html                          Setup
+    contact.html                        Contact information
+    ext:http://github.com/johnkerl/poki GitHub repo
+</pre>
+
+Simply put the page name on the left, and your desired title after that. Two special cases for the page name are:
+<ul>
+<li/> <tt>sep:texthere Text here</tt>: Just writes the words &ldquo;Text here&rdquo; in the nav bar with no hyperlink. You can use this to separate one logical grouping of pages from another.
+<li/> <tt>ext:urlhere  Text here</tt>: Writes an external hyperlink to <tt>urlhere</tt> with the specified href &ldquo;Text here&rdquo;.
 </ul>
 
 <h1>Limitations</h1>  <a id="Limitations"/>

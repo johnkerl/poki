@@ -65,6 +65,18 @@ respectively. Useful for including code snippets.
 
 </ul>
 
+<h1>poki.cfg</h1>
+
+This pageset&rsquo;s <tt>poki.cfg</tt> looks like:
+
+POKI_INCLUDE_ESCAPED(poki.cfg)HERE
+
+Simply put the page name on the left, and your desired title after that. Two special cases for the page name are:
+<ul>
+<li/> <tt>sep:texthere Text here</tt>: Just writes the words &ldquo;Text here&rdquo; in the nav bar with no hyperlink. You can use this to separate one logical grouping of pages from another.
+<li/> <tt>ext:urlhere  Text here</tt>: Writes an external hyperlink to <tt>urlhere</tt> with the specified href &ldquo;Text here&rdquo;.
+</ul>
+
 <h1>Limitations</h1>
 
 Poki isn&rsquo;t very smart &mdash; it&rsquo;s less than 200 lines of Ruby; I

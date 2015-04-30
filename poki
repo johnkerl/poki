@@ -63,6 +63,7 @@ def main()
   end
   usage if ARGV.length != 0
 
+  # Hashmaps are insertion-ordered in Ruby 1.9 and above
   page_map = load_config_file(config_file_name)
 
   generate_pages(template_file_name, content_file_prefix, config_file_name, page_map)
@@ -74,6 +75,12 @@ def load_config_file(config_file_name)
   line_number = 0
   File.readlines(config_file_name).each do |content_line|
     line_number += 1
+
+    # Strip comments
+    content_line = content_line.chomp.strip.sub(/#.*/, '')
+    # Skip blank lines, or lines with only comments on them
+    next if content_line.empty?
+
     fields = content_line.chomp.strip.split(/\s+/, 2)
     if fields.length != 2
       raise "#{$us}: Didn't find page name and page title at line #{line_number} of Poki config file #{config_file_name}'"
@@ -88,6 +95,10 @@ end
 # ================================================================
 def generate_pages(template_file_name, content_file_prefix, config_file_name, page_map)
   for output_file_name, title in page_map
+    # xxx needs doc
+    next if output_file_name =~ /^sep:/
+    next if output_file_name =~ /^ext:/
+
     input_file_name = "#{content_file_prefix}#{output_file_name}"
 
     if test(?f, output_file_name)
@@ -107,7 +118,14 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
           output_handle.puts(template_line.sub('POKI_PUT_PAGE_LIST_HERE', ''))
           output_handle.puts "<!-- PAGE LIST GENERATED FROM #{template_file_name} BY #{$us} -->"
           for link_name, link_text in page_map
-            output_handle.puts "<br/><a href=\"#{link_name}\">#{link_text}</a>"
+            if link_name =~ /^sep:/
+              output_handle.puts "<br/>#{link_text}"
+            elsif link_name =~ /^ext/
+              url = link_name.sub(/^ext:/, '')
+              output_handle.puts "<br/>&bull; <a href=\"#{url}\">#{link_text}</a>"
+            else
+              output_handle.puts "<br/>&bull; <a href=\"#{link_name}\">#{link_text}</a>"
+            end
           end
 
         # Template directive: Page titles in browser window title, as well as page-content title.
@@ -137,6 +155,7 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
               output_handle.puts("<center><b>Contents:</b></center>")
               tags.each do |tag|
                 depths[tag].times{output_handle.write "&nbsp;&nbsp;&nbsp;&nbsp;"}
+                output_handle.write "&bull; "
                 output_handle.write "<a href=\"##{tag}\">#{tag}</a>"
                 output_handle.puts "<br/>"
               end

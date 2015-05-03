@@ -1,19 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
-
 <!-- PAGE GENERATED FROM template.html and content-for-details.html BY poki. -->
 <!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-  <meta
-    name="description"
-    content="Poki documentation">
+  <meta name="description" content="Poki documentation"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
-
-  <title>
-  Details
-  </title>
+  <title> Details </title>
   <link rel="stylesheet" type="text/css" href="css/poki.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
@@ -29,68 +23,48 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
 
-<!--
-<body style="background-color:#d7d79a">
-<body background="pix/parchment-paper-texture-picture-free-graph_1173989.jpg">
-<body style="background-color:#f0f0f0">
--->
 <body style="background-color:#ffffff">
 
 <!-- ================================================================ -->
-<TABLE WIDTH="100%">
-<TR>
-<!-- Nav sidebar -->
-<TD WIDTH="15%">
+<table width="100%"><tbody> <tr>
 
-  <!--
-  <table width="100%" background="pix/parchment-paper-texture-picture-free-graph_1173989.jpg" border=0> <tbody>
-  <table width="100%" border=0> <tbody>
-  <table width="100%" bgcolor="ffffff" border=0> <tbody>
-  -->
-  <table width="100%" bgcolor="f0f0f0" border=0> <tbody>
-    <tr colspan=2 align="center">
-      <td>
-        <titleinbody>Poki</titleinbody>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        
+  <!-- Nav sidebar -->
+  <td width="15%">
+    <div class="pokinav">
+      <center><titleinbody>Poki</titleinbody></center>
+      <p/>
+      
 <!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/>&bull; <a href="index.html">About Poki</a>
-<br/>&bull; <a href="walkthrough.html">Walkthrough</a>
-<br/>&bull; <a href="details.html">Details</a>
-<br/>&bull; <a href="setup.html">Setup</a>
-<br/>&bull; <a href="contact.html">Contact information</a>
-<br/>&bull; <a href="http://github.com/johnkerl/poki">GitHub repo</a>
-        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+<br/>&bull;&nbsp;<a href="index.html">About Poki</a>
+<br/>&bull;&nbsp;<a href="walkthrough.html">Walkthrough</a>
+<br/>&bull;&nbsp;<a href="details.html">Details</a>
+<br/>&bull;&nbsp;<a href="setup.html">Setup</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="http://github.com/johnkerl/poki">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+    <//div>
+  </td>
 
-      </td>
-    </tr>
-  </tbody></table>
-</TD>
-<!-- Page-content part -->
-<TD>
-  <center>
-  <titleinbody>
-  Details
-  </titleinbody>
-  </center>
-  <p>
-  
+  <!-- Page content -->
+  <td>
+    <center> <titleinbody>
+    Details
+    </titleinbody> </center>
+    <p>
+    
 <!-- BODY COPIED FROM content-for-details.html BY poki -->
-<div style="border: 1px solid black ; padding: 3px; width: 25%;">
+<div class="pokitoc">
 <center><b>Contents:</b></center>
-&bull; <a href="#Naming_conventions">Naming conventions</a><br/>
-&bull; <a href="#Callback_CSS">Callback CSS</a><br/>
-&bull; <a href="#Template-side_markup">Template-side markup</a><br/>
-&bull; <a href="#Content-side_markup">Content-side markup</a><br/>
-&bull; <a href="#poki.cfg">poki.cfg</a><br/>
-&bull; <a href="#Limitations">Limitations</a><br/>
+&bull;&nbsp;<a href="#Naming_conventions">Naming conventions</a><br/>
+&bull;&nbsp;<a href="#Callback_CSS">Callback CSS</a><br/>
+&bull;&nbsp;<a href="#Template-side_markup">Template-side markup</a><br/>
+&bull;&nbsp;<a href="#Content-side_markup">Content-side markup</a><br/>
+&bull;&nbsp;<a href="#poki.cfg">poki.cfg</a><br/>
+&bull;&nbsp;<a href="#Limitations">Limitations</a><br/>
 </div>
 <p/>
 
@@ -112,15 +86,40 @@ You can define this div-class to look however you want for your pageset. An exam
 <p/>
 <div class="pokipanel">
 <pre>
-.pokipanel {
-  display: inline-block;
-  background: #ffffff;
-  box-shadow:0px 0px 3px 3px #C9C9C9;
-  margin: 10px;
-  padding-top: 2px;
+
+.pokinav {
+  display:        inline-block;
+  background:     #f0f0f0;
+  border:         1;
+  box-shadow:     0px 0px 3px 3px #C9C9C9;
+  margin:         10px;
+  padding-top:    10px;
   padding-bottom: 2px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left:   10px;
+  padding-right:  10px;
+}
+
+.pokitoc {
+  display:        inline-block;
+  border:         1px solid black;
+  background:     #ffffff;
+  box-shadow:     0px 0px 3px 3px #C9C9C9;
+  margin:         10px;
+  padding-top:    5px;
+  padding-bottom: 5px;
+  padding-left:   10px;
+  padding-right:  10px;
+}
+
+.pokipanel {
+  display:        inline-block;
+  background:     #ffffff;
+  box-shadow:     0px 0px 3px 3px #C9C9C9;
+  margin:         10px;
+  padding-top:    2px;
+  padding-bottom: 2px;
+  padding-left:   15px;
+  padding-right:  15px;
 }
 </pre>
 </div>
@@ -220,14 +219,12 @@ or stale duplicative content.
 Example using <tt>POKI_<wbr>RUN_COMMAND{{uptime}}HERE</tt>:
 
 <p/>
-<p/>
 <div class="pokipanel">
 <pre>
 $ uptime
-10:51  up 12 days, 22:05, 6 users, load averages: 1.85 1.79 1.67
+14:15  up 13 days,  1:28, 3 users, load averages: 1.77 1.72 1.69
 </pre>
 </div>
-<p/>
 <p/>
 
 </ul>
@@ -281,8 +278,9 @@ This how I differentiate section headers intended for the TOC from content about
 on lines entirely by themselves.
 
 </ul>
-</TD>
-</TABLE>
+  </td>
+
+</tr></tbody></table>
 <!-- ================================================================ -->
 
 </body>

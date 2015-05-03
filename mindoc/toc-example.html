@@ -6,54 +6,48 @@
 <head>
   <title>Page using TOC</title>
   <link rel="stylesheet" type="text/css" href="css/pokimin.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
 
 <table width="100%"> <tr>
-<td width="15%"> <!-- Nav-sidebar part (which is a subtable) -->
-  <table width="100%" bgcolor="#e0e0e0" border=0> <tbody>
-    <tr colspan=2 align="center">
-      <td>
-        <titleinbody>Poki Example</titleinbody>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        
+  <td width="15%"> <!-- Nav-sidebar part (which is a subtable) -->
+    <div class="pokinav">
+      <titleinbody>Poki Example</titleinbody>
+      
 <!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/><a href="index.html">Cover page</a>
-<br/><a href="toc-example.html">Page using TOC</a>
-      </td>
-    </tr>
-  </tbody></table>
-</td>
-<td> <!-- Page-content part -->
-  <center> <titleinbody> Page using TOC </titleinbody> </center>
+<br/>&bull;&nbsp;<a href="index.html">Cover page</a>
+<br/>&bull;&nbsp;<a href="toc-example.html">Page using TOC</a>
+    </div>
+  </td>
+  <td> <!-- Page-content part -->
+    <center> <titleinbody> Page using TOC </titleinbody> </center>
+    <p>
+    
 <!-- BODY COPIED FROM content-for-toc-example.html BY poki -->
-  <p>
-<div style="border: 1px solid black ; padding: 3px; width: 25%;">
+<div class="pokitoc">
 <center><b>Contents:</b></center>
-<a href="#First heading">First heading</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Subheading 1a">Subheading 1a</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Subheading 1b">Subheading 1b</a><br/>
-<a href="#Second heading">Second heading</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Subheading 2a">Subheading 2a</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Subheading 2b">Subheading 2b</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Subheading 2c">Subheading 2c</a><br/>
+&bull;&nbsp;<a href="#First_heading">First heading</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Subheading_1a">Subheading 1a</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Subheading_1b">Subheading 1b</a><br/>
+&bull;&nbsp;<a href="#Second_heading">Second heading</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Subheading_2a">Subheading 2a</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Subheading_2b">Subheading 2b</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Subheading_2c">Subheading 2c</a><br/>
 </div>
 <p/>
 
-<h1>First heading</h1>  <a id="First heading"/>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+<h1>First heading</h1>  <a id="First_heading"/>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua.
 
-<h2>Subheading 1a</h2>  <a id="Subheading 1a"/>Ut enim ad minim veniam ...
-<h2>Subheading 1b</h2>  <a id="Subheading 1b"/>... quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+<h2>Subheading 1a</h2>  <a id="Subheading_1a"/>Ut enim ad minim veniam ...
+<h2>Subheading 1b</h2>  <a id="Subheading_1b"/>... quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-<h1>Second heading</h1>  <a id="Second heading"/>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+<h1>Second heading</h1>  <a id="Second_heading"/>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
 fugiat nulla pariatur.
-<h2>Subheading 2a</h2>  <a id="Subheading 2a"/>Excepteur sint occaecat cupidatat non proident ...
-<h2>Subheading 2b</h2>  <a id="Subheading 2b"/>... sunt in culpa ...
-<h2>Subheading 2c</h2>  <a id="Subheading 2c"/>... qui officia deserunt mollit anim id est laborum.
-</td>
+<h2>Subheading 2a</h2>  <a id="Subheading_2a"/>Excepteur sint occaecat cupidatat non proident ...
+<h2>Subheading 2b</h2>  <a id="Subheading_2b"/>... sunt in culpa ...
+<h2>Subheading 2c</h2>  <a id="Subheading_2c"/>... qui officia deserunt mollit anim id est laborum.
+  </td>
 </table>
 </body>
 </html>

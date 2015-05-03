@@ -95,8 +95,9 @@ end
 # ================================================================
 def generate_pages(template_file_name, content_file_prefix, config_file_name, page_map)
   for output_file_name, title in page_map
-    # xxx needs doc
+    # Separator lines aren't associated with a local input HTML file.
     next if output_file_name =~ /^sep:/
+    # External links aren't associated with a local input HTML file.
     next if output_file_name =~ /^ext:/
 
     input_file_name = "#{content_file_prefix}#{output_file_name}"
@@ -174,11 +175,7 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
               #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#f4e5d2"><tr><td>')
               output_handle.puts('<pre>')
               File.readlines(included_file_name).each do |included_line|
-                included_line.gsub!("&", "&amp;")
-                included_line.gsub!("<", "&lt;")
-                included_line.gsub!(">", "&gt;")
-                included_line.sub!(/^/, leader)
-                included_line.rstrip!
+                included_line = html_escape_line(included_line)
                 output_handle.puts(included_line)
               end
               output_handle.puts('</pre>')
@@ -192,11 +189,7 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
               output_handle.puts(content_line.sub(/POKI_CARDIFY\([^)]+\)HERE/, ''))
               output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
               output_handle.puts('<pre>')
-              included_line.gsub!("&", "&amp;")
-              included_line.gsub!("<", "&lt;")
-              included_line.gsub!(">", "&gt;")
-              included_line.sub!(/^/, leader)
-              included_line.rstrip!
+              included_line = html_escape_line(included_line)
               output_handle.puts(included_line)
               output_handle.puts('</pre>')
               output_handle.puts('</table>')
@@ -221,11 +214,7 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
               end
               # xxx check $? ...
               cmd_output_lines.split(/\n/).each do |cmd_output_line|
-                cmd_output_line.gsub!("&", "&amp;")
-                cmd_output_line.gsub!("<", "&lt;")
-                cmd_output_line.gsub!(">", "&gt;")
-                cmd_output_line.sub!(/^/, leader)
-                cmd_output_line.rstrip!
+                cmd_output_line = html_escape_line(cmd_output_line)
                 output_handle.puts(cmd_output_line)
               end
               output_handle.puts('</pre>')
@@ -271,6 +260,11 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
     FileUtils.chmod($output_file_mode_after_edit, output_file_name)
     puts "Generated #{output_file_name}"
   end
+end
+
+# ----------------------------------------------------------------
+def html_escape_line(line)
+  line.gsub("&", "&amp;").gsub("<", "&lt;").gsub(">", "&gt;").rstrip
 end
 
 # ================================================================

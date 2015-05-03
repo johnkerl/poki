@@ -172,19 +172,16 @@ def generate_page_body(input_file_name, page_map, output_handle)
     # Page-content directive: include other file (do HTML escapes)
     elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
       included_file_name = $1
-      output_handle.puts(content_line.sub(/POKI_INCLUDE_ESCAPED\([^)]+\)HERE/, ''))
       include_escaped(included_file_name, output_handle)
 
     # Page-content directive: format as if included from a file.
     elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
       content_line = $1
-      output_handle.puts(content_line.sub(/POKI_CARDIFY\([^)]+\)HERE/, ''))
       cardify(content_line, output_handle)
 
     # Page-content directive: include other file (do HTML escapes)
     elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
       cmd = $1
-      output_handle.puts(content_line.sub(/POKI_RUN_COMMAND{{.+}}HERE/, ''))
       run_command(cmd, output_handle)
 
     # Page-content directive: link to sibling in pageset.
@@ -265,13 +262,15 @@ end
 
 # ----------------------------------------------------------------
 def write_card(content_lines, output_handle)
-  output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
+  output_handle.puts('<p/>')
+  output_handle.puts('<div class="pokipanel">')
   output_handle.puts('<pre>')
   content_lines.each do |content_line|
     output_handle.puts(html_escape_line(content_line))
   end
   output_handle.puts('</pre>')
-  output_handle.puts('</table>')
+  output_handle.puts('</div>')
+  output_handle.puts('<p/>')
 end
 
 # ----------------------------------------------------------------

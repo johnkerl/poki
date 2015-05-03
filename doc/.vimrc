@@ -1,2 +1,2 @@
-map \r :w<C-m>:!../poki<C-m>
-map \f :w<C-m>:!../poki<C-m>
+map \r :w<C-m>:!clear;../poki<C-m>
+map \f :w<C-m>:!clear;../poki<C-m>

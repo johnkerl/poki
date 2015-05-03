@@ -117,17 +117,8 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
         # Template directive: For left-hand link-list.
         elsif template_line =~ /POKI_PUT_PAGE_LIST_HERE/
           output_handle.puts(template_line.sub('POKI_PUT_PAGE_LIST_HERE', ''))
-          output_handle.puts "<!-- PAGE LIST GENERATED FROM #{template_file_name} BY #{$us} -->"
-          for link_name, link_text in page_map
-            if link_name =~ /^sep:/
-              output_handle.puts "<br/>#{link_text}"
-            elsif link_name =~ /^ext/
-              url = link_name.sub(/^ext:/, '')
-              output_handle.puts "<br/>&bull; <a href=\"#{url}\">#{link_text}</a>"
-            else
-              output_handle.puts "<br/>&bull; <a href=\"#{link_name}\">#{link_text}</a>"
-            end
-          end
+
+          generate_page_list(template_file_name, page_map, output_handle)
 
         # Template directive: Page titles in browser window title, as well as page-content title.
         elsif template_line =~ /POKI_PUT_TITLE_HERE/
@@ -141,45 +132,13 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
             # Page-content directive: table of contents.
             if content_line =~ /POKI_PUT_TOC_HERE/
               output_handle.puts(template_line.sub('POKI_PUT_BODY_HERE', ''))
-              tags = []
-              depths = {}
-              File.readlines(input_file_name).each do |scan_line|
-                if scan_line =~ /<h([1-9])>(.*)<\/h[1-9]>/
-                  depth = $1
-                  tag   = $2.strip
-                  tags << tag
-                  depths[tag] = depth.to_i - 1
-                end
-              end
-
-              output_handle.puts("<div style=\"border: 1px solid black ; padding: 3px; width: 25%;\">")
-              output_handle.puts("<center><b>Contents:</b></center>")
-              tags.each do |tag|
-                depths[tag].times{output_handle.write "&nbsp;&nbsp;&nbsp;&nbsp;"}
-                output_handle.write "&bull; "
-                output_handle.write "<a href=\"##{tag}\">#{tag}</a>"
-                output_handle.puts "<br/>"
-              end
-              output_handle.puts("</div>")
-              output_handle.puts("<p/>")
+              generate_toc(input_file_name, output_handle)
 
             # Page-content directive: include other file (do HTML escapes)
             elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
-              #leader = '    '
-              leader = ''
               included_file_name = $1
               output_handle.puts(content_line.sub(/POKI_INCLUDE_ESCAPED\([^)]+\)HERE/, ''))
-              #output_handle.puts('<table border=1 bgcolor="#f0f0f0"><tr><td>')
-              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e5d7ba"><tr><td>') # good
-              output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
-              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#f4e5d2"><tr><td>')
-              output_handle.puts('<pre>')
-              File.readlines(included_file_name).each do |included_line|
-                included_line = html_escape_line(included_line)
-                output_handle.puts(included_line)
-              end
-              output_handle.puts('</pre>')
-              output_handle.puts('</table>')
+              include_escaped(included_file_name, output_handle)
 
             # Page-content directive: format as if included from a file.
             elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
@@ -196,30 +155,9 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
 
             # Page-content directive: include other file (do HTML escapes)
             elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
-              #leader = '    '
-              leader = ''
               cmd = $1
               output_handle.puts(content_line.sub(/POKI_RUN_COMMAND{{.+}}HERE/, ''))
-              #output_handle.puts('<table border=1 bgcolor="#f0f0f0"><tr><td>')
-              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#fdf5d4"><tr><td>') # good std
-              output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
-              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#f4e5d2"><tr><td>')
-              #output_handle.puts("<div style=\"border: 1px solid black ; padding: 3px; width: 25%;\">")
-              output_handle.puts('<pre>')
-              output_handle.puts(('$ '+cmd).sub(/^/, leader))
-              cmd_output_lines = `#{cmd}`
-              status = $?.to_i
-              if status != 0
-                raise "\"#{cmd}\" exited with non-zero code #{status}."
-              end
-              # xxx check $? ...
-              cmd_output_lines.split(/\n/).each do |cmd_output_line|
-                cmd_output_line = html_escape_line(cmd_output_line)
-                output_handle.puts(cmd_output_line)
-              end
-              output_handle.puts('</pre>')
-              #output_handle.puts('</div>')
-              output_handle.puts('</td></tr></table>')
+              run_command(cmd, output_handle)
 
             # Page-content directive: link to sibling in pageset.
             elsif content_line =~ /POKI_PUT_LINK_FOR_PAGE\(([^)]+)\)HERE/
@@ -243,7 +181,10 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
             #
             elsif content_line =~ /<h([1-9])>(.*)<\/h[1-9]>/
               tag = $2.strip
-              output_handle.write(content_line.chomp + "  <a id=\"#{tag}\"/>")
+              # If there's a section with a space in it (e.g. "Naming conventions") then
+              # make the href text the same but underscorify the link itself (e.g.
+              # "Naming_conventions").
+              output_handle.write(content_line.chomp + "  <a id=\"#{tag.gsub(' ', '_')}\"/>")
 
             else
               output_handle.write(content_line)
@@ -260,6 +201,80 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
     FileUtils.chmod($output_file_mode_after_edit, output_file_name)
     puts "Generated #{output_file_name}"
   end
+end
+
+# ----------------------------------------------------------------
+def generate_page_list(template_file_name, page_map, output_handle)
+  output_handle.puts "<!-- PAGE LIST GENERATED FROM #{template_file_name} BY #{$us} -->"
+  for link_name, link_text in page_map
+    if link_name =~ /^sep:/
+      output_handle.puts "<br/>#{link_text}"
+    elsif link_name =~ /^ext/
+      url = link_name.sub(/^ext:/, '')
+      output_handle.puts "<br/>&bull; <a href=\"#{url}\">#{link_text}</a>"
+    else
+      output_handle.puts "<br/>&bull; <a href=\"#{link_name}\">#{link_text}</a>"
+    end
+  end
+end
+
+# ----------------------------------------------------------------
+def generate_toc(input_file_name, output_handle)
+  # Read all the <h1>, <h2>, <h3>, etc. from the current file and create internal links
+  tags   = []
+  depths = {}
+  File.readlines(input_file_name).each do |scan_line|
+    if scan_line =~ /^<h([1-9])>(.*)<\/h[1-9]>/
+      depth = $1
+      tag   = $2.strip
+      tags << tag
+      depths[tag] = depth.to_i - 1
+    end
+  end
+
+  output_handle.puts("<div style=\"border: 1px solid black ; padding: 3px; width: 25%;\">")
+  output_handle.puts("<center><b>Contents:</b></center>")
+  tags.each do |tag|
+    # Indent h2 more than h1, h3 more than h2, etc.
+    depths[tag].times{output_handle.write "&nbsp;&nbsp;&nbsp;&nbsp;"}
+    output_handle.write "&bull; "
+    # If there's a section with a space in it (e.g. "Naming conventions") then
+    # make the href text the same but underscorify the link itself (e.g.
+    # "Naming_conventions").
+    output_handle.write "<a href=\"##{tag.gsub(' ', '_')}\">#{tag}</a>"
+    output_handle.puts "<br/>"
+  end
+  output_handle.puts("</div>")
+  output_handle.puts("<p/>")
+end
+
+# ----------------------------------------------------------------
+def include_escaped(included_file_name, output_handle)
+  output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
+  output_handle.puts('<pre>')
+  File.readlines(included_file_name).each do |included_line|
+    output_handle.puts(html_escape_line(included_line))
+  end
+  output_handle.puts('</pre>')
+  output_handle.puts('</table>')
+end
+
+# ----------------------------------------------------------------
+def run_command(cmd, output_handle)
+  output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
+  output_handle.puts('<pre>')
+  output_handle.puts('$ '+cmd)
+  cmd_output_lines = `#{cmd}`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  cmd_output_lines.split(/\n/).each do |cmd_output_line|
+    cmd_output_line = html_escape_line(cmd_output_line)
+    output_handle.puts(cmd_output_line)
+  end
+  output_handle.puts('</pre>')
+  output_handle.puts('</td></tr></table>')
 end
 
 # ----------------------------------------------------------------

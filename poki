@@ -164,18 +164,73 @@ def generate_pages(template_file_name, content_file_prefix, config_file_name, pa
 
             # Page-content directive: include other file (do HTML escapes)
             elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
+              #leader = '    '
+              leader = ''
               included_file_name = $1
               output_handle.puts(content_line.sub(/POKI_INCLUDE_ESCAPED\([^)]+\)HERE/, ''))
+              #output_handle.puts('<table border=1 bgcolor="#f0f0f0"><tr><td>')
+              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e5d7ba"><tr><td>') # good
+              output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
+              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#f4e5d2"><tr><td>')
               output_handle.puts('<pre>')
               File.readlines(included_file_name).each do |included_line|
                 included_line.gsub!("&", "&amp;")
                 included_line.gsub!("<", "&lt;")
                 included_line.gsub!(">", "&gt;")
-                included_line.sub!(/^/, '    ')
+                included_line.sub!(/^/, leader)
                 included_line.rstrip!
                 output_handle.puts(included_line)
               end
               output_handle.puts('</pre>')
+              output_handle.puts('</table>')
+
+            # Page-content directive: format as if included from a file.
+            elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
+              #leader = '    '
+              leader = ''
+              included_line = $1
+              output_handle.puts(content_line.sub(/POKI_CARDIFY\([^)]+\)HERE/, ''))
+              output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
+              output_handle.puts('<pre>')
+              included_line.gsub!("&", "&amp;")
+              included_line.gsub!("<", "&lt;")
+              included_line.gsub!(">", "&gt;")
+              included_line.sub!(/^/, leader)
+              included_line.rstrip!
+              output_handle.puts(included_line)
+              output_handle.puts('</pre>')
+              output_handle.puts('</table>')
+
+            # Page-content directive: include other file (do HTML escapes)
+            elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
+              #leader = '    '
+              leader = ''
+              cmd = $1
+              output_handle.puts(content_line.sub(/POKI_RUN_COMMAND{{.+}}HERE/, ''))
+              #output_handle.puts('<table border=1 bgcolor="#f0f0f0"><tr><td>')
+              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#fdf5d4"><tr><td>') # good std
+              output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
+              #output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#f4e5d2"><tr><td>')
+              #output_handle.puts("<div style=\"border: 1px solid black ; padding: 3px; width: 25%;\">")
+              output_handle.puts('<pre>')
+              output_handle.puts(('$ '+cmd).sub(/^/, leader))
+              cmd_output_lines = `#{cmd}`
+              status = $?.to_i
+              if status != 0
+                raise "\"#{cmd}\" exited with non-zero code #{status}."
+              end
+              # xxx check $? ...
+              cmd_output_lines.split(/\n/).each do |cmd_output_line|
+                cmd_output_line.gsub!("&", "&amp;")
+                cmd_output_line.gsub!("<", "&lt;")
+                cmd_output_line.gsub!(">", "&gt;")
+                cmd_output_line.sub!(/^/, leader)
+                cmd_output_line.rstrip!
+                output_handle.puts(cmd_output_line)
+              end
+              output_handle.puts('</pre>')
+              #output_handle.puts('</div>')
+              output_handle.puts('</td></tr></table>')
 
             # Page-content directive: link to sibling in pageset.
             elsif content_line =~ /POKI_PUT_LINK_FOR_PAGE\(([^)]+)\)HERE/

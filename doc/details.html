@@ -152,22 +152,49 @@ sent to
 <tt>&amp;gt;</tt>,
 respectively. Useful for including code snippets.
 
+<!-- Use <wbr> to avoid expansion of the keyword, for this doc page -->
+<li/><tt>POKI<wbr>_CARDIFY(single line of text here)HERE</tt>:
+Format <tt>single line of text</tt> the same way as <tt>POKI<wbr>_INCLUDE_ESCAPED</tt>.
+Useful for including code snippets.
+
+<!-- Use <wbr> to avoid expansion of the keyword, for this doc page -->
+<li/><tt>POKI<wbr>_RUN_COMMAND{{shell command}}HERE</tt>:
+Run <tt>shell command</tt> and then format the command name and its output the
+same way as <tt>POKI<wbr>_INCLUDE_ESCAPED</tt>. Useful for creating technical
+documents which match the current status of the software, without copy/paste errors
+or stale duplicative content.
+
+Example using <tt>POKI_<wbr>RUN_COMMAND{{uptime}}HERE</tt>:
+
+
+<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>
+<pre>
+$ uptime
+ 8:32  up 12 days, 19:45, 5 users, load averages: 1.29 1.68 1.68
+</pre>
+</td></tr></table>
+
 </ul>
 
 <h1>poki.cfg</h1>  <a id="poki.cfg"/>
-This pageset&rsquo;s <tt>poki.cfg</tt> looks like:
+This pageset&rsquo;s <tt>poki.cfg</tt> looks like this:
 
-
+<p/> 
+<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>
 <pre>
-    index.html                          About Poki
-    walkthrough.html                    Walkthrough
-    details.html                        Details
-    setup.html                          Setup
-    contact.html                        Contact information
-    ext:http://github.com/johnkerl/poki GitHub repo
-</pre>
+# Here is a comment
+index.html                          About Poki
+walkthrough.html                    Walkthrough
+details.html                        Details # Here is another comment
+setup.html                          Setup
+contact.html                        Contact information
+# Blank lines are ignored:
 
-Simply put the page name on the left, and your desired title after that. Two special cases for the page name are:
+ext:http://github.com/johnkerl/poki GitHub repo
+</pre>
+</table>
+
+<p/> Simply put the page name on the left, and your desired title after that. Two special cases for the page name are:
 <ul>
 <li/> <tt>sep:texthere Text here</tt>: Just writes the words &ldquo;Text here&rdquo; in the nav bar with no hyperlink. You can use this to separate one logical grouping of pages from another.
 <li/> <tt>ext:urlhere  Text here</tt>: Writes an external hyperlink to <tt>urlhere</tt> with the specified href &ldquo;Text here&rdquo;.

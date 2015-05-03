@@ -129,7 +129,7 @@ def generate_page(template_file_name, input_file_name, output_file_name, title, 
       elsif template_line =~ /POKI_PUT_TITLE_HERE/
         output_handle.puts(template_line.sub('POKI_PUT_TITLE_HERE', title))
 
-      # Template directive: Page content.
+      # Template directive: Page body.
       elsif template_line =~ /POKI_PUT_BODY_HERE/
         output_handle.puts(template_line.sub('POKI_PUT_BODY_HERE', ''))
         generate_page_body(input_file_name, page_map, output_handle)
@@ -245,38 +245,31 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
-  output_handle.puts('<pre>')
-  File.readlines(included_file_name).each do |included_line|
-    output_handle.puts(html_escape_line(included_line))
-  end
-  output_handle.puts('</pre>')
-  output_handle.puts('</table>')
+  write_card(File.readlines(included_file_name), output_handle)
 end
 
 # ----------------------------------------------------------------
 def run_command(cmd, output_handle)
-  output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
-  output_handle.puts('<pre>')
-  output_handle.puts('$ '+cmd)
-  cmd_output_lines = `#{cmd}`
+  cmd_output = `#{cmd}`
   status = $?.to_i
   if status != 0
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
-  cmd_output_lines.split(/\n/).each do |cmd_output_line|
-    cmd_output_line = html_escape_line(cmd_output_line)
-    output_handle.puts(cmd_output_line)
-  end
-  output_handle.puts('</pre>')
-  output_handle.puts('</td></tr></table>')
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
 def cardify(content_line, output_handle)
+  write_card([content_line], output_handle)
+end
+
+# ----------------------------------------------------------------
+def write_card(content_lines, output_handle)
   output_handle.puts('<table border=1 bordercolor="#f1c40f" bgcolor="#e8d9bc"><tr><td>')
   output_handle.puts('<pre>')
-  output_handle.puts(html_escape_line(content_line))
+  content_lines.each do |content_line|
+    output_handle.puts(html_escape_line(content_line))
+  end
   output_handle.puts('</pre>')
   output_handle.puts('</table>')
 end

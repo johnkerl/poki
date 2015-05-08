@@ -202,7 +202,9 @@ def generate_page_body(input_file_name, page_map, output_handle)
       # If there's a section with a space in it (e.g. "Naming conventions") then
       # make the href text the same but underscorify the link itself (e.g.
       # "Naming_conventions").
-      output_handle.write(content_line.chomp + "  <a id=\"#{tag.gsub(' ', '_')}\"/>")
+      #output_handle.write(content_line.chomp + "  <a id=\"#{tag.gsub(' ', '_')}\"/>")
+      output_handle.print("<a id=\"#{tag.gsub(' ', '_')}\"/>")
+      output_handle.write(content_line)
 
     else
       output_handle.write(content_line)
@@ -224,7 +226,6 @@ def generate_toc(input_file_name, output_handle)
     end
   end
 
-  #output_handle.puts("<div style=\"border: 1px solid black ; padding: 3px; width: 25%;\">")
   output_handle.puts('<div class="pokitoc">')
   output_handle.puts("<center><b>Contents:</b></center>")
   tags.each do |tag|

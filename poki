@@ -123,7 +123,7 @@ def generate_page(template_file_name, input_file_name, output_file_name, title, 
       # Template directive: For left-hand link-list.
       elsif template_line =~ /POKI_PUT_PAGE_LIST_HERE/
         output_handle.puts(template_line.sub('POKI_PUT_PAGE_LIST_HERE', ''))
-        generate_page_list(template_file_name, page_map, output_handle)
+        generate_page_list(template_file_name, output_file_name, page_map, output_handle)
 
       # Template directive: Page titles in browser window title, as well as page-content title.
       elsif template_line =~ /POKI_PUT_TITLE_HERE/
@@ -146,7 +146,8 @@ def generate_page(template_file_name, input_file_name, output_file_name, title, 
 end
 
 # ----------------------------------------------------------------
-def generate_page_list(template_file_name, page_map, output_handle)
+def generate_page_list(template_file_name, output_file_path, page_map, output_handle)
+  output_file_name = File.basename(output_file_path)
   output_handle.puts "<!-- PAGE LIST GENERATED FROM #{template_file_name} BY #{$us} -->"
   for link_name, link_text in page_map
     if link_name =~ /^sep:/
@@ -155,7 +156,15 @@ def generate_page_list(template_file_name, page_map, output_handle)
       url = link_name.sub(/^ext:/, '')
       output_handle.puts "<br/>&bull;&nbsp;<a href=\"#{url}\">#{link_text}</a>"
     else
-      output_handle.puts "<br/>&bull;&nbsp;<a href=\"#{link_name}\">#{link_text}</a>"
+      bs = ""
+      be = ""
+      if output_file_name == link_name
+        # Bold the current file in the navbar. xxx to do: use callback CSS so the caller
+        # can control how to format this.
+        bs = "<b>"
+        be = "</b>"
+      end
+      output_handle.puts "<br/>&bull;&nbsp;<a href=\"#{link_name}\">#{bs}#{link_text}#{be}</a>"
     end
   end
 end

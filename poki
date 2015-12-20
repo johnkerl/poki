@@ -188,6 +188,10 @@ def generate_page_body(input_file_name, page_map, output_handle)
       content_line = $1
       cardify(content_line, output_handle)
 
+    elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
+      content_line = $1
+      cardify(content_line, output_handle)
+
     # Page-content directive: include other file (do HTML escapes)
     elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
       cmd = $1

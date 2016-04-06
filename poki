@@ -183,6 +183,13 @@ def generate_page_body(input_file_name, page_map, output_handle)
       included_file_name = $1
       include_escaped(included_file_name, output_handle)
 
+    # Page-content directive: include other file (do HTML escapes) and print its output
+    elsif content_line =~ /POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)HERE/
+      included_file_name = $1
+      #include_escaped(included_file_name, output_handle)
+      cmd = File.readlines(included_file_name).join('')
+      run_command(cmd, output_handle)
+
     # Page-content directive: format as if included from a file.
     elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
       content_line = $1

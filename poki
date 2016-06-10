@@ -194,6 +194,9 @@ def generate_page_body(input_file_name, page_map, output_handle)
     elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
       content_line = $1
       cardify(content_line, output_handle)
+    elsif content_line =~ /POKI_CARDIFY{{([^)]+)}}HERE/
+      content_line = $1
+      cardify(content_line, output_handle)
 
     elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
       content_line = $1

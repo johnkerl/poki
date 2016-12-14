@@ -207,6 +207,11 @@ def generate_page_body(input_file_name, page_map, output_handle)
       cmd = $1
       run_command(cmd, output_handle)
 
+    # Page-content directive: include other file (do HTML escapes)
+    elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
+      cmd = $1
+      run_command_tolerating_error(cmd, output_handle)
+
     # Page-content directive: link to sibling in pageset.
     elsif content_line =~ /POKI_PUT_LINK_FOR_PAGE\(([^)]+)\)HERE/
       other_page_name = $1
@@ -272,11 +277,17 @@ end
 
 # ----------------------------------------------------------------
 def run_command(cmd, output_handle)
-  cmd_output = `#{cmd}`
+  cmd_output = `#{cmd} 2>&1`
   status = $?.to_i
   if status != 0
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_command_tolerating_error(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
   write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
 end
 

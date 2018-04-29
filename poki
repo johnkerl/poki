@@ -132,7 +132,7 @@ def generate_page(template_file_name, input_file_name, output_file_name, title, 
       # Template directive: Page body.
       elsif template_line =~ /POKI_PUT_BODY_HERE/
         output_handle.puts(template_line.sub('POKI_PUT_BODY_HERE', ''))
-        generate_page_body(input_file_name, page_map, output_handle)
+        generate_page_body(input_file_name, page_map, output_handle, config_file_name)
 
       # Absent any other directives, copy the template file to the output file.
       else
@@ -170,7 +170,7 @@ def generate_page_list(template_file_name, output_file_path, page_map, output_ha
 end
 
 # ----------------------------------------------------------------
-def generate_page_body(input_file_name, page_map, output_handle)
+def generate_page_body(input_file_name, page_map, output_handle, config_file_name)
   output_handle.puts "<!-- BODY COPIED FROM #{input_file_name} BY #{$us} -->"
   File.readlines(input_file_name).each do |content_line|
 
@@ -186,9 +186,14 @@ def generate_page_body(input_file_name, page_map, output_handle)
     # Page-content directive: include other file (do HTML escapes) and print its output
     elsif content_line =~ /POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)HERE/
       included_file_name = $1
-      #include_escaped(included_file_name, output_handle)
       cmd = File.readlines(included_file_name).join('')
-      run_command(cmd, output_handle)
+      run_command(cmd, output_handle, true)
+
+    # Page-content directive: run a script which generates HTML and print its output
+    elsif content_line =~ /POKI_RUN_UNESCAPED\(([^)]+)\)HERE/
+      included_file_name = $1
+      cmd = File.readlines(included_file_name).join('')
+      run_command(cmd, output_handle, false)
 
     # Page-content directive: include other file (do HTML escapes) and print its output
     elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)HERE/
@@ -198,19 +203,19 @@ def generate_page_body(input_file_name, page_map, output_handle)
     # Page-content directive: format as if included from a file.
     elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
       content_line = $1
-      cardify(content_line, output_handle)
+      cardify(content_line, output_handle, true)
     elsif content_line =~ /POKI_CARDIFY{{([^)]+)}}HERE/
       content_line = $1
-      cardify(content_line, output_handle)
+      cardify(content_line, output_handle, true)
 
     elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
       content_line = $1
-      cardify(content_line, output_handle)
+      cardify(content_line, output_handle, true)
 
     # Page-content directive: include other file (do HTML escapes)
     elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
       cmd = $1
-      run_command(cmd, output_handle)
+      run_command(cmd, output_handle, true)
 
     # Page-content directive: include other file (do HTML escapes)
     elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
@@ -278,23 +283,23 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card(File.readlines(included_file_name), output_handle)
+  write_card(File.readlines(included_file_name), output_handle, true)
 end
 
 # ----------------------------------------------------------------
-def run_command(cmd, output_handle)
+def run_command(cmd, output_handle, do_escape)
   cmd_output = `#{cmd} 2>&1`
   status = $?.to_i
   if status != 0
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
-  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle, do_escape)
 end
 
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd, output_handle)
   cmd_output = `#{cmd} 2>&1`
-  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle, true)
 end
 
 # ----------------------------------------------------------------
@@ -308,17 +313,21 @@ def run_content_generator(cmd, output_handle)
 end
 
 # ----------------------------------------------------------------
-def cardify(content_line, output_handle)
-  write_card([content_line], output_handle)
+def cardify(content_line, output_handle, do_escape)
+  write_card([content_line], output_handle, do_escape)
 end
 
 # ----------------------------------------------------------------
-def write_card(content_lines, output_handle)
+def write_card(content_lines, output_handle, do_escape)
   output_handle.puts('<p/>')
   output_handle.puts('<div class="pokipanel">')
   output_handle.puts('<pre>')
   content_lines.each do |content_line|
-    output_handle.puts(html_escape_line(content_line))
+    if do_escape
+      output_handle.puts(html_escape_line(content_line))
+    else
+      output_handle.puts(content_line)
+    end
   end
   output_handle.puts('</pre>')
   output_handle.puts('</div>')
